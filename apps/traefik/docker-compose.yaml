@@ -1,0 +1,32 @@
+version: '3.2'
+
+services:
+  traefik:
+    image: traefik:v2.6
+    network_mode: "host"
+    container_name: "traefik"
+    command:
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=namecheap"
+      - "--certificatesresolvers.letsencrypt.acme.email=james.lim@jamochl.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/data/letsencrypt:/letsencrypt"
+    environment:
+      NAMECHEAP_API_USER: "${namecheap_api_user}"
+      NAMECHEAP_API_KEY: "${namecheap_api_key}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.lan.jamochl.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+      - "traefik.http.services.dashboard.loadbalancer.server.port=1337"
