@@ -2,4 +2,4 @@
 docker-prod.lan.jamochl.com
 
 [gocd]
-localhost
+gocd.lan.jamochl.com
