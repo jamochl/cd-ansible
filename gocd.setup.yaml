@@ -1,0 +1,12 @@
+---
+- name: install common packages
+  hosts: gocd
+  become: true
+  roles:
+    - packages
+
+- name: configure and deploy the gocd
+  hosts: gocd
+  become: true
+  roles:
+    - gocd

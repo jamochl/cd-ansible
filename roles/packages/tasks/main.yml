@@ -1,0 +1,22 @@
+---
+# tasks file for packages
+- name: Ensure system up to date
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: Install pip and basic build packages
+  apt:
+    name:
+      - python3-pip
+      - make
+      - gcc
+      - docker-ce
+    state: latest
+
+- name: Install Ansible and docker-compose
+  pip:
+    name:
+      - ansible
+      - docker-compose
+    state: latest

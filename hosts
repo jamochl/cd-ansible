@@ -1,0 +1,5 @@
+[docker]
+docker-prod.lan.jamochl.com
+
+[gocd]
+localhost
