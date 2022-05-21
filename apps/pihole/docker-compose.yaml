@@ -11,7 +11,7 @@ services:
       - "80:80/tcp"
     environment:
       TZ: 'Australia/Melbourne'
-      ServerIP: "pihole.lan.jamochl.com"
+      ServerIP: "${SERVER_IP}"
 
     # Volumes store your data between container upgrades
     volumes:

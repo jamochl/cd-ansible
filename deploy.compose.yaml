@@ -1,0 +1,10 @@
+# Required env
+# APP_NAME
+---
+- name: Start Service
+  hosts: docker
+  become: true
+  roles:
+    - role: deploy-compose
+      vars:
+        app_name: "{{ lookup('env', 'APP_NAME') }}"

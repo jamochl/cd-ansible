@@ -1,0 +1,8 @@
+---
+- name: Start Service
+  hosts: docker
+  become: true
+  roles:
+    - role: deploy-compose
+      vars:
+        app_name: pihole

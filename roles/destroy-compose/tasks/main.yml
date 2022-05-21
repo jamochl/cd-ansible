@@ -1,0 +1,56 @@
+---
+# tasks file for deploy-compose
+- name: Install required pip packages
+  pip:
+    name:
+      - docker>=1.8.0
+      - docker-compose>=1.7.0,<2.0.0
+      - PyYaml>=3.11
+    state: present
+
+- name: Begin Destroy Compose
+  block:
+  - name: Copy over compose file
+    ansible.builtin.copy:
+      src: "../../../apps/{{app_name}}/docker-compose.yaml"
+      dest: "/tmp/{{app_name}}"
+
+  - name: Check .env file exists
+    stat:
+      path: ../../../apps/{{app_name}}/.env"
+    register: env_file
+
+  - name: Copy over .env file
+    ansible.builtin.copy:
+      src: "../../../apps/{{app_name}}/.env"
+      dest: "/tmp/{{app_name}}"
+      decrypt: yes
+    when: env_file.stat.exists
+
+- name: Delete services
+  community.docker.docker_compose:
+    project_src: "/tmp/{{app_name}}"
+    project_name: "{{app_name}}"
+    state: absent
+  register: compose-delete
+
+- name: Delete volumes
+  community.docker.docker_compose:
+    project_src: "/tmp/{{app_name}}"
+    project_name: "{{app_name}}"
+    remove_volumes: yes
+    state: absent
+  register: volume-delete
+  when: delete_volumes exists && delete_volumes == 'true'
+
+- name: Delete app data directory
+  ansible.builtin.file:
+    path: "/data/{{app_name}}"
+    state: absent
+  when: delete_volumes exists && delete_volumes == 'true'
+
+  always:
+  - name: Delete compose and env file
+    ansible.builtin.file:
+      path: "/tmp/{{app_name}}"
+      state: absent

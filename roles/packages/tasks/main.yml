@@ -14,9 +14,19 @@
       - docker-ce
     state: latest
 
-- name: Install Ansible and docker-compose
+- name: Install Ansible
   pip:
     name:
       - ansible
-      - docker-compose
-    state: latest
+    state: present
+
+- name: Install community.general ansible galaxy
+  community.general.ansible_galaxy_install:
+    type: collection
+    name: community.general
+
+- name: Install community.docker ansible galaxy
+  community.general.ansible_galaxy_install:
+    type: collection
+    name: community.docker
+

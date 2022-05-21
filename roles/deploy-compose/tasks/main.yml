@@ -1,0 +1,49 @@
+---
+# tasks file for deploy-compose
+- name: Install required pip packages
+  pip:
+    name:
+      - docker>=1.8.0
+      - docker-compose>=1.7.0,<2.0.0
+      - PyYaml>=3.11
+    state: present
+
+- name: Ensure data directory exists
+  ansible.builtin.file:
+    path: /data
+    state: directory
+    mode: '0755'
+
+- name: Begin Compose
+  block:
+  - name: Copy over compose file
+    ansible.builtin.copy:
+      src: "../../../apps/{{app_name}}/docker-compose.yaml"
+      dest: "/tmp/{{app_name}}"
+
+  - name: Check .env file exists
+    stat:
+      path: ../../../apps/{{app_name}}/.env"
+    register: env_file
+
+  - name: Copy over .env file
+    ansible.builtin.copy:
+      src: "../../../apps/{{app_name}}/.env"
+      dest: "/tmp/{{app_name}}"
+      decrypt: yes
+    when: env_file.stat.exists
+
+  - name: Create and start services
+    community.docker.docker_compose:
+      project_src: "/tmp/{{app_name}}"
+      project_name: "{{app_name}}"
+      pull: yes
+      recreate: smart
+      restarted: yes
+      state: present
+
+  always:
+  - name: Delete compose and env file
+    ansible.builtin.file:
+      path: "/tmp/{{app_name}}"
+      state: absent
