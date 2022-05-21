@@ -15,35 +15,46 @@
     mode: '0755'
 
 - name: Begin Compose
+  vars:
+    PWD: "{{ lookup('env', 'PWD') }}"
   block:
+  - name: Create tmp directory
+    ansible.builtin.file:
+      path: "/tmp/{{ app_name }}"
+      state: directory
+      mode: '0755'
+
   - name: Copy over compose file
     ansible.builtin.copy:
-      src: "../../../apps/{{app_name}}/docker-compose.yaml"
-      dest: "/tmp/{{app_name}}"
+      src: "{{ PWD }}/apps/{{ app_name }}/docker-compose.yaml"
+      dest: "/tmp/{{ app_name }}/docker-compose.yaml"
 
   - name: Check .env file exists
+    delegate_to: localhost
     stat:
-      path: ../../../apps/{{app_name}}/.env"
+      path: "{{ PWD }}/apps/{{ app_name }}/.env"
     register: env_file
 
   - name: Copy over .env file
     ansible.builtin.copy:
-      src: "../../../apps/{{app_name}}/.env"
-      dest: "/tmp/{{app_name}}"
+      src: "{{ PWD }}/apps/{{ app_name }}/.env"
+      dest: "/tmp/{{ app_name }}/.env"
       decrypt: yes
     when: env_file.stat.exists
 
+  - name: Check that .env file is good
+    pause:
+
   - name: Create and start services
     community.docker.docker_compose:
-      project_src: "/tmp/{{app_name}}"
-      project_name: "{{app_name}}"
+      project_src: "/tmp/{{ app_name }}"
+      project_name: "{{ app_name }}"
       pull: yes
-      recreate: smart
-      restarted: yes
+      recreate: always
       state: present
 
-  always:
-  - name: Delete compose and env file
-    ansible.builtin.file:
-      path: "/tmp/{{app_name}}"
-      state: absent
+  # always:
+  # - name: Delete compose and env file
+  #   ansible.builtin.file:
+  #     path: "/tmp/{{ app_name }}"
+  #     state: absent

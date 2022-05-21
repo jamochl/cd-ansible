@@ -1,8 +1,8 @@
 ---
-- name: Start Service
+- name: Destroy Service
   hosts: docker
   become: true
   roles:
-    - role: deploy-compose
+    - role: destroy-compose
       vars:
-        app_name: pihole
+        app_name: "{{ lookup('env', 'APP_NAME') }}"
