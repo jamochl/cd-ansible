@@ -1,5 +1,5 @@
 [docker]
-docker-prod.lan.jamochl.com
+docker.lan.jamochl.com
 
 [gocd]
 gocd.lan.jamochl.com
