@@ -1,0 +1,15 @@
+---
+- name: "Destroy all apps"
+  hosts: docker
+  become: true
+  tasks:
+    - name: "Destroy service"
+      with_items:
+        # - nextcloud
+        - pihole
+        - traefik
+        - uptimekuma
+      include_role:
+        name: destroy-compose
+      vars:
+        app_name: "{{ item }}"

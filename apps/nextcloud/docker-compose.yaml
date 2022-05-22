@@ -2,23 +2,23 @@ version: '3.2'
 
 services:
   app:
-    build: ./nextcloud
+    build: ./nc-docker
     restart: always
     volumes:
-      - /data/nextcloud:/var/www/html
+      - "${APP_DATA_DIR:?err}:/var/www/html"
     environment:
       SQLITE_DATABASE: nextcloud
-      NEXTCLOUD_ADMIN_USER: "${nextcloud_admin_user}"
-      NEXTCLOUD_ADMIN_PASSWORD: "${nextcloud_admin_password}"
-      NEXTCLOUD_TRUSTED_DOMAINS: "${nextcloud_trusted_domains}"
-      TRUSTED_PROXIES: "${trusted_proxies}"
-      OBJECTSTORE_S3_HOST: "${s3_url}"
-      OBJECTSTORE_S3_BUCKET: "${s3_bucket}"
-      OBJECTSTORE_S3_KEY: "${s3_key}"
-      OBJECTSTORE_S3_SECRET: "${s3_secret}"
-      OBJECTSTORE_S3_PORT: "${s3_port}"
+      NEXTCLOUD_ADMIN_USER: "${nextcloud_admin_user:?err}"
+      NEXTCLOUD_ADMIN_PASSWORD: "${nextcloud_admin_password:?err}"
+      NEXTCLOUD_TRUSTED_DOMAINS: "${nextcloud_trusted_domains:?err}"
+      TRUSTED_PROXIES: "${trusted_proxies:?err}"
+      OBJECTSTORE_S3_HOST: "${s3_url:?err}"
+      OBJECTSTORE_S3_BUCKET: "${s3_bucket:?err}"
+      OBJECTSTORE_S3_KEY: "${s3_key:?err}"
+      OBJECTSTORE_S3_SECRET: "${s3_secret:?err}"
+      OBJECTSTORE_S3_PORT: "${s3_port:?err}"
       OBJECTSTORE_S3_SSL: "false"
-      OBJECTSTORE_S3_REGION: "{s3_region}"
+      OBJECTSTORE_S3_REGION: "{s3_region:?err}"
       OBJECTSTORE_S3_USEPATH_STYLE: "true"
       OBJECTSTORE_S3_AUTOCREATE: "false"
     depends_on:
@@ -26,7 +26,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nextcloud.rule=Host(`cloud.lan.jamochl.com`)"
-      - "traefik.http.routers.nextcloud.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.nextcloud.entrypoints=web,websecure"
+      - "traefik.http.routers.nextcloud.entrypoints=web"
       - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
   

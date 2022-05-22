@@ -11,54 +11,55 @@
 - name: Begin Destroy Compose
   vars:
     PWD: "{{ lookup('env', 'PWD') }}"
+    config_dir: "/config/"
+    app_config_dir: "/config/{{ app_name }}"
+    data_dir: "/data/"
+    app_data_dir: "/data/{{ app_name }}"
   block:
-  - name: Create tmp directory
+  - name: Clear app config directory
     ansible.builtin.file:
-      path: "/tmp/{{ app_name }}"
+      path: "{{ app_config_dir }}"
+      state: absent
+
+  - name: Reinitialise app config directory
+    ansible.builtin.file:
+      path: "{{ app_config_dir }}"
       state: directory
       mode: '0755'
 
-  - name: Copy over compose file
+  - name: Copy over app files
     ansible.builtin.copy:
-      src: "{{ PWD }}/apps/{{ app_name }}/docker-compose.yaml"
-      dest: "/tmp/{{ app_name }}/docker-compose.yaml"
-
-  - name: Check .env file exists
-    delegate_to: localhost
-    stat:
-      path: "{{ PWD }}/apps/{{ app_name }}/.env"
-    register: env_file
-
-  - name: Copy over .env file
-    ansible.builtin.copy:
-      src: "{{ PWD }}/apps/{{ app_name }}/.env"
-      dest: "/tmp/{{ app_name }}/.env"
+      src: "{{ PWD }}/apps/{{ app_name }}"
       decrypt: yes
-    when: env_file.stat.exists
+      dest: "{{ config_dir }}"
 
   - name: Delete services
     community.docker.docker_compose:
-      project_src: "/tmp/{{ app_name }}"
+      project_src: "{{ app_config_dir }}"
       project_name: "{{ app_name }}"
       state: absent
+    environment:
+      APP_DATA_DIR: "{{ app_data_dir }}"
+
 
   - name: Delete volumes
     when: (delete_volumes is defined) and (delete_volumes == 'true')
     block:
     - name: Remove Docker volumes
       community.docker.docker_compose:
-        project_src: "/tmp/{{ app_name }}"
+        project_src: "{{ app_config_dir }}"
         project_name: "{{ app_name }}"
         remove_volumes: yes
         state: absent
+      environment:
+        APP_DATA_DIR: "{{ app_data_dir }}"
 
     - name: Delete app data directory
       ansible.builtin.file:
-        path: "/data/{{ app_name }}"
+        path: "{{ app_data_dir }}"
         state: absent
 
-  always:
-  - name: Delete compose and env file
-    ansible.builtin.file:
-      path: "/tmp/{{ app_name }}"
-      state: absent
+    - name: Delete app config directory
+      ansible.builtin.file:
+        path: "{{ app_config_dir }}"
+        state: absent
