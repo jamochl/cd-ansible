@@ -3,12 +3,15 @@
   hosts: docker
   become: true
   tasks:
+    - name: "Get Services"
+      delegate_to: localhost
+      shell: ls apps
+      register: dir_output
+      changed_when: False
+      failed_when: dir_output.stdout_lines == []
+
     - name: "Start service"
-      with_items:
-        # - nextcloud
-        - pihole
-        - traefik
-        - uptimekuma
+      with_items: "{{ dir_output.stdout_lines }}"
       include_role:
         name: deploy-compose
       vars:
