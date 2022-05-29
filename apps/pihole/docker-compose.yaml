@@ -8,6 +8,7 @@ services:
       - "53:53/tcp"
       - "53:53/udp"
       - "67:67/udp"
+      - "9003:80/tcp"
     environment:
       TZ: 'Australia/Melbourne'
       ServerIP: "${SERVER_IP:?err}"

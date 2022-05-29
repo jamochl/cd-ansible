@@ -11,7 +11,7 @@
       failed_when: dir_output.stdout_lines == []
 
     - name: "Destroy service"
-      with_items: "{{ dir_output.stdout_lines }}"
+      with_items: "{{ dir_output.stdout_lines | list }}"
       include_role:
         name: destroy-compose
       vars:

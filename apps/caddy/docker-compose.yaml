@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  caddy:
+    build: ./caddy-docker
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      NAMECHEAP_API_KEY: "${NAMECHEAP_API_KEY:?err}"
+      NAMECHEAP_API_USER: "${NAMECHEAP_API_USER:?err}"
+    volumes:
+      - "${APP_CONFIG_DIR:?err}/Caddyfile:/etc/caddy/Caddyfile"
+      - "${APP_DATA_DIR:?err}/data:/data"
+      - "${APP_DATA_DIR:?err}/config:/config"

@@ -2,6 +2,8 @@ version: '3.8'
 services:
   uptimekuma:
     image: louislam/uptime-kuma:1
+    ports:
+      - "9004:3001/tcp"
     volumes:
       - "/${APP_DATA_DIR:?err}:/app/data"
     restart: always

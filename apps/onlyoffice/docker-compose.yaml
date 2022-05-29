@@ -1,0 +1,16 @@
+version: '3.2'
+
+services:
+  onlyoffice:
+    image: onlyoffice/documentserver:latest
+    ports:
+      - 9002:80
+    restart: always
+    volumes:
+      - "${APP_DATA_DIR:?err}/logs:/var/log/onlyoffice"
+      - "${APP_DATA_DIR:?err}/data:/var/www/onlyoffice/Data"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.onlyoffice.rule=Host(`onlyoffice.lan.jamochl.com`)"
+      - "traefik.http.routers.onlyoffice.entrypoints=web"
+      - "traefik.http.services.onlyoffice.loadbalancer.server.port=80"

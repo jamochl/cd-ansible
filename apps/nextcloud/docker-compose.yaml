@@ -3,6 +3,8 @@ version: '3.2'
 services:
   app:
     build: ./nc-docker
+    ports:
+      - 9001:80
     restart: always
     volumes:
       - "${APP_DATA_DIR:?err}:/var/www/html"
@@ -26,10 +28,3 @@ services:
       - "traefik.http.routers.nextcloud.rule=Host(`cloud.lan.jamochl.com`)"
       - "traefik.http.routers.nextcloud.entrypoints=web"
       - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
-
-  onlyoffice:
-    image: onlyoffice/documentserver:latest
-    restart: always
-    volumes:
-      - "${APP_DATA_DIR:?}/onlyoffice/logs:/var/log/onlyoffice"
-      - "${APP_DATA_DIR:?}/onlyoffice/data:/var/www/onlyoffice/Data"

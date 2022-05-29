@@ -49,8 +49,11 @@
     community.docker.docker_compose:
       project_src: "{{ app_config_dir }}"
       project_name: "{{ app_name }}"
+      build: yes
       pull: yes
+      remove_orphans: yes
       recreate: always
       state: present
     environment:
       APP_DATA_DIR: "{{ app_data_dir }}"
+      APP_CONFIG_DIR: "{{ app_config_dir }}"
