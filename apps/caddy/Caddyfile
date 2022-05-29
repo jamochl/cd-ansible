@@ -1,6 +1,6 @@
 {
     email james.lim@jamochl.com
-    acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+    // acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
 }
 
 *.lan.jamochl.com {
@@ -12,18 +12,18 @@
     }
     @nextcloud host cloud.lan.jamochl.com
     handle @nextcloud {
-        reverse_proxy localhost:9001
+        reverse_proxy host.docker.internal:9001
     }
     @onlyoffice host onlyoffice.lan.jamochl.com
     handle @onlyoffice {
-        reverse_proxy localhost:9002
+        reverse_proxy host.docker.internal:9002
     }
     @pihole host pihole.lan.jamochl.com
     handle @pihole {
-        reverse_proxy localhost:9003
+        reverse_proxy host.docker.internal:9003
     }
-    @uptimekuma host uptimekuma.lan.jamochl.com
+    @uptimekuma host uptime.lan.jamochl.com
     handle @uptimekuma {
-        reverse_proxy localhost:9004
+        reverse_proxy host.docker.internal:9004
     }
 }
