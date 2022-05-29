@@ -1,6 +1,6 @@
 {
     email james.lim@jamochl.com
-    // acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+    # acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
 }
 
 *.lan.jamochl.com {
