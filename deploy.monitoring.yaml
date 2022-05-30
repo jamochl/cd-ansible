@@ -1,0 +1,44 @@
+- name: Start Monitoring Service
+  hosts: docker
+  become: true
+  vars:
+    PWD: "{{ lookup('env', 'PWD') }}"
+    config_dir: "/config/"
+    app_config_dir: "/config/{{ app_name }}"
+    data_dir: "/data/"
+    app_data_dir: "/data/{{ app_name }}"
+  tasks:
+    - name: Install a plugin
+      community.docker.docker_plugin:
+        plugin_name: grafana/loki-docker-driver:latest
+        state: present
+
+    - name: Enable the plugin
+      community.docker.docker_plugin:
+        plugin_name: grafana/loki-docker-driver:latest
+        state: enable
+
+    - name: Copy over app files
+      ansible.builtin.copy:
+        src: "{{ PWD }}/apps/monitoring"
+        dest: "{{ config_dir }}"
+
+    - name: Create docker daemon config
+      ansible.builtin.copy:
+        src: "{{ config_dir }}/monitoring/daemon.json"
+        dest: "/etc/docker/daemon.json"
+        remote_src: yes
+        owner: root
+        group: root
+      register: daemon_config
+
+    - name: Reload docker
+      ansible.builtin.service:
+        name: docker
+        state: restarted
+      when: daemon_config.changed == false
+
+    - include_role:
+        name: deploy-compose
+      vars:
+        app_name: "monitoring"
