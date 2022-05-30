@@ -25,9 +25,8 @@
 
     - name: Create docker daemon config
       ansible.builtin.copy:
-        src: "{{ config_dir }}/monitoring/daemon.json"
+        src: "{{ PWD }}/apps/monitoring/daemon.json"
         dest: "/etc/docker/daemon.json"
-        remote_src: yes
         owner: root
         group: root
       register: daemon_config

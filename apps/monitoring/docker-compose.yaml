@@ -16,7 +16,6 @@ services:
   prometheus:
     image: prom/prometheus:latest
     restart: always
-    network_mode: "host"
     ports:
       - "9090:9090"
     volumes:
@@ -27,7 +26,6 @@ services:
   grafana:
     image: grafana/grafana:latest
     restart: always
-    network_mode: "host"
     ports:
       - "3000:3000"
     volumes:
