@@ -1,0 +1,8 @@
+---
+- name: Patch Service
+  hosts: docker
+  become: true
+  roles:
+    - role: docker-application
+      vars:
+        app_state: patch

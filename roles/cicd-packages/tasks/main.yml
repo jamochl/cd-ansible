@@ -18,15 +18,9 @@
   pip:
     name:
       - ansible
-    state: present
+    state: latest
 
-- name: Install community.general ansible galaxy
+- name: Install required ansible galaxies
   community.general.ansible_galaxy_install:
-    type: collection
-    name: community.general
-
-- name: Install community.docker ansible galaxy
-  community.general.ansible_galaxy_install:
-    type: collection
-    name: community.docker
-
+    type: both
+    requirements_file: "{{ lookup('env', 'PWD') }}/requirements.yaml"

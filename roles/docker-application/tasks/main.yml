@@ -1,0 +1,30 @@
+---
+# Ensure required packages present
+- name: Install required pip packages
+  pip:
+    name:
+      - docker>=1.8.0
+      - docker-compose>=1.7.0,<2.0.0
+      - PyYaml>=3.11
+    state: present
+
+# Ensure required directories present
+- name: Ensure config directory exists
+  ansible.builtin.file:
+    path: "{{ config_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Ensure data directory exists
+  ansible.builtin.file:
+    path: "{{ data_dir }}"
+    state: directory
+    mode: '0755'
+
+# Start application adjustment
+- name: Begin Application Adjustment
+  with_items: "{{ app_names | list }}"
+  vars:
+    app_config_dir: "/config/{{ item }}"
+    app_data_dir: "/data/{{ item }}"
+  include_tasks: "adjust_application.yaml"

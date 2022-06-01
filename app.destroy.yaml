@@ -3,6 +3,6 @@
   hosts: docker
   become: true
   roles:
-    - role: destroy-compose
+    - role: docker-application
       vars:
-        app_name: "{{ lookup('env', 'APP_NAME') }}"
+        app_state: destroy

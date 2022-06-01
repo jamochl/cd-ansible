@@ -3,3 +3,13 @@ docker.lan.jamochl.com
 
 [gocd]
 gocd.lan.jamochl.com
+
+[jenkins]
+jenkins.lan.jamochl.com
+
+[cicd]
+jenkins.lan.jamochl.com
+gocd.lan.jamochl.com
+
+[monitoring]
+top.lan.jamochl.com

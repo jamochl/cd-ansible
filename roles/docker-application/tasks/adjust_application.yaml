@@ -1,0 +1,60 @@
+# Get config onto host
+- name: "Synchronize {{ item }} config"
+  ansible.builtin.copy:
+    src: "{{ PWD }}/apps/{{ item }}"
+    dest: "{{ config_dir }}"
+    decrypt: yes
+
+- name: "Adjust application {{ item }}"
+  environment:
+    APP_DATA_DIR: "{{ app_data_dir }}"
+    APP_CONFIG_DIR: "{{ app_config_dir }}"
+  block:
+  # Patch
+  - name: "Patch app {{ item }}"
+    community.docker.docker_compose:
+      project_src: "{{ app_config_dir }}"
+      project_name: "{{ item }}"
+      build: yes
+      pull: yes
+      remove_orphans: yes
+      recreate: always
+      restarted: yes
+      state: present
+    when: app_state == "patch"
+
+  # Deploy
+  - name: "Deploy app {{ item }}"
+    community.docker.docker_compose:
+      project_src: "{{ app_config_dir }}"
+      project_name: "{{ item }}"
+      build: no
+      remove_orphans: yes
+      recreate: smart
+      restarted: no
+      state: present
+    when: app_state == "deploy"
+
+  # Destroy
+  - name: "Destroy App"
+    when: app_state == "destroy"
+    block:
+    - name: "Destroy app {{ item }}"
+      community.docker.docker_compose:
+        project_src: "{{ app_config_dir }}"
+        project_name: "{{ item }}"
+        remove_orphans: yes
+        remove_volumes: "{{ delete_volumes }}"
+        state: absent
+
+    - name: "Delete app {{ item }} data directory"
+      ansible.builtin.file:
+        path: "{{ app_data_dir }}"
+        state: absent
+      when: delete_volumes == "yes"
+
+    - name: "Delete app {{ item }} config directory"
+      ansible.builtin.file:
+        path: "{{ app_config_dir }}"
+        state: absent
+      when: delete_volumes == "yes"

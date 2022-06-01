@@ -1,0 +1,9 @@
+---
+- name: Configure and deploy the cicd server
+  hosts: cicd
+  become: true
+  roles:
+    - cicd-packages
+    - gocd
+    - cloudalchemy.node_exporter
+    # - jenkins
