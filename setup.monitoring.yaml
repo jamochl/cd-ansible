@@ -1,38 +1,48 @@
 - name: Setup monitoring server
   hosts: monitoring
   become: true
-  roles:
-    - cloudalchemy.prometheus
-    - geerlingguy.docker
-
-- name: Setup grafana
-  hosts: monitoring
-  become: true
-  roles:
-    - cloudalchemy.grafana
-  vars:
-    grafana_security:
-      admin_user: admin
-      # TODO
-      admin_password: test
-    grafana_datasources:
-    - name: prometheus
-      type: prometheus
-      url: 'http://localhost:9090'
-      basicAuth: false
-    - name: loki
-      type: loki
-      url: 'http://localhost:3100'
-      basicAuth: false
-
-- name: Deploy monitoring stack
-  hosts: monitoring
-  become: true
   tasks:
-  - name: Deploy Caddy and Loki
+
+  - name: Install Pip
+    apt:
+      name: python3-pip
+      state: present
+
+  - name: Install docker
+    include_role:
+      name: geerlingguy.docker
+    vars:
+      docker_daemon_options:
+        metrics-addr: "0.0.0.0:9323"
+        experimental: true
+
+  - name: Install prometheus
+    include_role:
+      name: cloudalchemy.prometheus
+    vars:
+      prometheus_config_file: apps/monitoring/prometheus.yml
+
+  - name: Deploy monitoring stack
     include_role:
       name: docker-application
     vars:
       app_names:
         - monitoring
       app_state: deploy
+
+  - name: Setup grafana
+    include_role:
+      name: cloudalchemy.grafana
+    vars:
+      grafana_security:
+        admin_user: admin
+        admin_password: "{{ grafana_admin_pass }}"
+      grafana_datasources:
+      - name: prometheus
+        type: prometheus
+        url: 'http://localhost:9090'
+        basicAuth: false
+      - name: loki
+        type: loki
+        url: 'http://localhost:3100'
+        basicAuth: false

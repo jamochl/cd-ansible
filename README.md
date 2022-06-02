@@ -1,3 +1,10 @@
+# Requires
+
+```
+ansible-galaxy install -r requirements.yaml
+pip3 install jmespath
+```
+
 # Examples
 
 ## Deploy

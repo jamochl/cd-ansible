@@ -30,6 +30,7 @@ services:
       - -config.expand-env=true
   
   caddy:
+    build: ./caddy-image
     restart: always
     ports:
       - "80:80"

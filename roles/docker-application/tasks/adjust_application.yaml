@@ -4,6 +4,7 @@
     src: "{{ PWD }}/apps/{{ item }}"
     dest: "{{ config_dir }}"
     decrypt: yes
+  register: synchronize_status
 
 - name: "Adjust application {{ item }}"
   environment:
@@ -33,7 +34,20 @@
       recreate: smart
       restarted: no
       state: present
-    when: app_state == "deploy"
+    when: app_state == "deploy" and synchronize_status.changed == false
+
+  # Redeploy
+  - name: "Redeploy app {{ item }}"
+    community.docker.docker_compose:
+      project_src: "{{ app_config_dir }}"
+      project_name: "{{ item }}"
+      build: yes
+      pull: yes
+      remove_orphans: yes
+      recreate: always
+      restarted: yes
+      state: present
+    when: app_state == "deploy" and synchronize_status.changed == true
 
   # Destroy
   - name: "Destroy App"
