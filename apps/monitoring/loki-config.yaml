@@ -4,30 +4,35 @@ server:
   http_listen_port: 3100
   grpc_listen_port: 9096
 
-common:
-  path_prefix: /tmp/loki
-  storage:
-    filesystem:
-      chunks_directory: /tmp/loki/chunks
-      rules_directory: /tmp/loki/rules
-  replication_factor: 1
-  ring:
-    instance_addr: 127.0.0.1
-    kvstore:
-      store: inmemory
+# S3-compatible APIs such as Ceph Object Storage with an S3-compatible API, can be used.
+# If the API supports path-style URLs rather than virtual hosted bucket addressing,
+# configure the URL in `storage_config` with the custom endpoint
 
 schema_config:
   configs:
-    - from: 2020-10-24
-      store: boltdb-shipper
-      object_store: filesystem
-      schema: v11
-      index:
-        prefix: index_
-        period: 24h
+  - from: 2020-05-15
+    store: aws
+    object_store: s3
+    schema: v11
+    index:
+      prefix: loki_
+storage_config:
+  aws:
+    bucketnames: graphana-loki
+    endpoint: truenas.lan:9000
+    region: ap-southeast-2
+    access_key_id: "${S3_ACCESS_KEY}"
+    secret_access_key: "${S3_SECRET_KEY}"
+    insecure: false
+    sse_encryption: false
+    http_config:
+      idle_conn_timeout: 90s
+      response_header_timeout: 0s
+      insecure_skip_verify: true
+    s3forcepathstyle: true
 
-ruler:
-  alertmanager_url: http://localhost:9093
+# ruler:
+  # alertmanager_url: http://localhost:9093
 
 # By default, Loki will send anonymous, but uniquely-identifiable usage and configuration
 # analytics to Grafana Labs. These statistics are sent to https://stats.grafana.org/
@@ -39,5 +44,5 @@ ruler:
 # Refer to the buildReport method to see what goes into a report.
 #
 # If you would like to disable reporting, uncomment the following lines:
-#analytics:
-#  reporting_enabled: false
+analytics:
+ reporting_enabled: false

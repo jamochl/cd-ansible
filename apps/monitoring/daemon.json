@@ -1,10 +1,4 @@
 {
-    "debug" : true,
-    "log-driver": "grafana/loki-docker-driver:latest",
-    "log-opts": {
-        "loki-url": "http://localhost:3100/loki/api/v1/push",
-        "loki-batch-size": "400"
-    },
-    "metrics-addr" : "localhost:9323",
+    "metrics-addr" : "0.0.0.0:9323",
     "experimental" : true
 }

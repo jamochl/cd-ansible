@@ -1,0 +1,14 @@
+{
+    email james.lim@jamochl.com
+    # acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
+
+top.lan.jamochl.com {
+    tls {
+        dns namecheap {
+            api_key {env.NAMECHEAP_API_KEY}
+            user {env.NAMECHEAP_API_USER}
+        }
+    }
+    reverse_proxy host.docker.internal:3000
+}

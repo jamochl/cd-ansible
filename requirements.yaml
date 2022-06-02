@@ -7,6 +7,5 @@ roles:
   - name: cloudalchemy.prometheus
 
 collections:
-  - name: ansible.posix
   - name: community.docker
   - name: community.general

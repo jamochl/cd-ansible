@@ -1,34 +1,45 @@
 version: "3.8"
 
-networks:
-  netstack:
-
 services:
   loki:
     image: grafana/loki:2.5.0
     restart: always
     ports:
       - "3100:3100"
-    command: -config.file=/etc/loki/local-config.yaml
-    networks:
-      - netstack
-
-  prometheus:
-    image: prom/prometheus:latest
+    volumes:
+      - "${APP_CONFIG_DIR:?err}/loki-config.yaml:/etc/loki/loki-config.yaml"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      S3_ACCESS_KEY: "${S3_ACCESS_KEY:?err}"
+      S3_SECRET_KEY: "${S3_SECRET_KEY:?err}"
+    command:
+      - -config.file=/etc/loki/loki-config.yaml
+      - -config.expand-env=true
+  
+  promtail:
+    image: grafana/promtail:2.5.0
+    restart: always
+    volumes:
+      - "${APP_CONFIG_DIR:?err}/promtail-config.yaml:/etc/promtail/promtail-config.yaml"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/var/log/journal/:/var/log/journal/:ro"
+      - "/run/log/journal/:/run/log/journal/:ro"
+      - "/etc/machine-id:/etc/machine-id:ro"
+    command:
+      - -config.file=/etc/promtail/promtail-config.yaml
+      - -config.expand-env=true
+  
+  caddy:
     restart: always
     ports:
-      - "9090:9090"
+      - "80:80"
+      - "443:443"
+    environment:
+      NAMECHEAP_API_KEY: "${NAMECHEAP_API_KEY:?err}"
+      NAMECHEAP_API_USER: "${NAMECHEAP_API_USER:?err}"
     volumes:
-      - ${APP_CONFIG_DIR:?err}/prometheus.yml:/etc/prometheus/prometheus.yml
-    networks:
-      - netstack
-
-  grafana:
-    image: grafana/grafana:latest
-    restart: always
-    ports:
-      - "3000:3000"
-    volumes:
-      - "${APP_DATA_DIR:?err}/graphana:/var/lib/grafana"
-    networks:
-      - netstack
+      - "${APP_CONFIG_DIR:?err}/Caddyfile:/etc/caddy/Caddyfile"
+      - "${APP_DATA_DIR:?err}/data:/data"
+      - "${APP_DATA_DIR:?err}/config:/config"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
