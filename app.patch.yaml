@@ -1,6 +1,6 @@
 ---
 - name: Patch Service
-  hosts: docker
+  hosts: "{{ host }}"
   become: true
   roles:
     - role: docker-application

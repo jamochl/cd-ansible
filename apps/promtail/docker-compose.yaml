@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  promtail:
+    image: grafana/promtail:2.5.0
+    restart: always
+    volumes:
+      - "${APP_CONFIG_DIR:?err}/promtail-config.yaml:/etc/promtail/promtail-config.yaml"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/var/log/journal/:/var/log/journal/:ro"
+      - "/run/log/journal/:/run/log/journal/:ro"
+      - "/etc/machine-id:/etc/machine-id:ro"
+    command:
+      - -config.file=/etc/promtail/promtail-config.yaml
+      - -config.expand-env=true

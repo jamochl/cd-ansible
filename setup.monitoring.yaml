@@ -31,6 +31,7 @@
       name: docker-application
     vars:
       app_names:
+        - cadvisor
         - monitoring
       app_state: deploy
 

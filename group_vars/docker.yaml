@@ -5,3 +5,4 @@ app_names:
   - "onlyoffice"
   - "caddy"
   - "promtail"
+  # - "cadvisor"

@@ -24,29 +24,41 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'monitoring-host'
+  - job_name: 'monitoring-node-exporter'
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
     static_configs:
       - targets: ['localhost:9100']
 
-  - job_name: 'docker-prod-host'
-         # metrics_path defaults to '/metrics'
-         # scheme defaults to 'http'.
+  - job_name: 'monitoring-cadvisor'
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
     static_configs:
-      - targets: ['docker.lan.jamochl.com:9100']
-
-  - job_name: 'docker-prod-daemon'
-         # metrics_path defaults to '/metrics'
-         # scheme defaults to 'http'.
-    static_configs:
-      - targets: ['docker.lan.jamochl.com:9323']
+      - targets: ['localhost:8080']
 
   - job_name: 'monitoring-docker-daemon'
          # metrics_path defaults to '/metrics'
          # scheme defaults to 'http'.
     static_configs:
       - targets: ['localhost:9323']
+
+  - job_name: 'docker-prod-node-exporter'
+         # metrics_path defaults to '/metrics'
+         # scheme defaults to 'http'.
+    static_configs:
+      - targets: ['docker.lan.jamochl.com:9100']
+
+  - job_name: 'docker-prod-cadvisor'
+         # metrics_path defaults to '/metrics'
+         # scheme defaults to 'http'.
+    static_configs:
+      - targets: ['docker.lan.jamochl.com:8080']
+
+  - job_name: 'docker-prod-docker-daemon'
+         # metrics_path defaults to '/metrics'
+         # scheme defaults to 'http'.
+    static_configs:
+      - targets: ['docker.lan.jamochl.com:9323']
 
   # - job_name: 'cicd-server'
   #        # metrics_path defaults to '/metrics'
