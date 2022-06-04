@@ -22,6 +22,10 @@
     vars:
       prometheus_config_file: apps/monitoring/prometheus.yml
 
+  - name: Install node_exporter
+    include_role:
+      name: cloudalchemy.node_exporter
+
   - name: Deploy monitoring stack
     include_role:
       name: docker-application

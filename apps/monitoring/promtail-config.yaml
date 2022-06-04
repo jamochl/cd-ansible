@@ -18,7 +18,7 @@ scrape_configs:
       job: systemd-journal
   relabel_configs:
     - source_labels: ['__journal__systemd_unit']
-      target_label: 'unit'
+      target_label: 'monitoring_host_unit'
 
 - job_name: monitoring-docker-logs
   docker_sd_configs:
@@ -27,4 +27,4 @@ scrape_configs:
   relabel_configs:
     - source_labels: ['__meta_docker_container_name']
       regex: '/(.*)'
-      target_label: 'container'
+      target_label: 'monitoring_host_container'

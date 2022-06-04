@@ -8,7 +8,6 @@ services:
       - "3100:3100"
     volumes:
       - "${APP_CONFIG_DIR:?err}/loki-config.yaml:/etc/loki/loki-config.yaml"
-      - "/var/run/docker.sock:/var/run/docker.sock"
     environment:
       S3_ACCESS_KEY: "${S3_ACCESS_KEY:?err}"
       S3_SECRET_KEY: "${S3_SECRET_KEY:?err}"
@@ -21,7 +20,7 @@ services:
     restart: always
     volumes:
       - "${APP_CONFIG_DIR:?err}/promtail-config.yaml:/etc/promtail/promtail-config.yaml"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "/var/log/journal/:/var/log/journal/:ro"
       - "/run/log/journal/:/run/log/journal/:ro"
       - "/etc/machine-id:/etc/machine-id:ro"

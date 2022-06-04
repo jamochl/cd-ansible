@@ -4,3 +4,4 @@ app_names:
   - "uptimekuma"
   - "onlyoffice"
   - "caddy"
+  - "promtail"
