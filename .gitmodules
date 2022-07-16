@@ -1,0 +1,3 @@
+[submodule "apps/jenkins"]
+	path = apps/jenkins
+	url = git@github.com:jamochl/jenkins-config.git

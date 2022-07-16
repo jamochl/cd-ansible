@@ -11,16 +11,4 @@
       - python3-pip
       - make
       - gcc
-      - docker-ce
     state: latest
-
-- name: Install Ansible
-  pip:
-    name:
-      - ansible
-    state: latest
-
-- name: Install required ansible galaxies
-  community.general.ansible_galaxy_install:
-    type: both
-    requirements_file: "{{ lookup('env', 'PWD') }}/requirements.yaml"

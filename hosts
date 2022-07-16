@@ -5,11 +5,10 @@ docker.lan.jamochl.com
 gocd.lan.jamochl.com
 
 [jenkins]
-jenkins.lan.jamochl.com
+jenkins.lan.jamsparrow.com
 
 [cicd]
-jenkins.lan.jamochl.com
-gocd.lan.jamochl.com
+jenkins.lan.jamsparrow.com
 
 [monitoring]
 top.lan.jamochl.com
