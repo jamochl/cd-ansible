@@ -1,14 +1,14 @@
 [docker]
-docker.lan.jamsparrow.com
+192.168.86.15
 
 [gocd]
 gocd.lan.jamsparrow.com
 
 [jenkins]
-cicd.lan.jamsparrow.com
+192.168.86.40
 
 [cicd]
 cicd.lan.jamsparrow.com
 
 [monitoring]
-monitor.lan.jamsparrow.com
+192.168.86.30
