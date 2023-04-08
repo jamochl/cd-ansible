@@ -6,4 +6,3 @@ app_names:
   - "caddy"
   - "promtail"
   # - "cadvisor"
-host: docker

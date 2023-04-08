@@ -21,7 +21,7 @@
         mode: u=rw,g=r,o=r
 
     # Ensure APP_DATA_DIR and APP_CONFIG_DIR are added to the .env files
-    - name: Ensure the default Apache port is 8080
+    - name: Ensure .env file contains DATA and CONFIG directories
       ansible.builtin.lineinfile:
         path: "{{ app_config_dir }}/.env"
         regex: "{{ env_contents }}"
