@@ -18,13 +18,13 @@
 
   - name: Install prometheus
     ansible.builtin.include_role:
-      name: cloudalchemy.prometheus
+      name: prometheus.prometheus.prometheus
     vars:
       prometheus_config_file: apps/monitoring/prometheus.yml
 
   - name: Install node_exporter
     ansible.builtin.include_role:
-      name: cloudalchemy.node_exporter
+      name: prometheus.prometheus.node_exporter
 
   - name: Deploy monitoring stack
     ansible.builtin.include_role:

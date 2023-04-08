@@ -5,7 +5,7 @@
   tasks:
     - name: Install node_exporter
       ansible.builtin.include_role:
-        name: cloudalchemy.node_exporter
+        name: prometheus.prometheus.node_exporter
 
     - name: Install Docker
       ansible.builtin.include_role:
