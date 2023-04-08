@@ -28,7 +28,7 @@
 
   - name: Deploy monitoring stack
     ansible.builtin.include_role:
-      name: docker-application
+      name: docker_apps
     vars:
       app_names:
         - cadvisor

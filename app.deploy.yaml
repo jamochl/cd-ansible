@@ -3,6 +3,6 @@
   hosts: "{{ host }}"
   become: true
   roles:
-    - role: docker-application
+    - role: docker_apps
       vars:
         app_state: deploy

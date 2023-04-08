@@ -1,5 +1,5 @@
 ---
-# defaults file for docker-application
+# defaults file for docker_apps
 pwd: "{{ lookup('env', 'PWD') }}"
 config_dir: "/config/"
 data_dir: "/data/"
