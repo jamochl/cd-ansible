@@ -4,12 +4,12 @@
   tasks:
 
   - name: Install Pip
-    apt:
+    ansible.builtin.apt:
       name: python3-pip
       state: present
 
   - name: Install docker
-    include_role:
+    ansible.builtin.include_role:
       name: geerlingguy.docker
     vars:
       docker_daemon_options:
@@ -17,17 +17,17 @@
         experimental: true
 
   - name: Install prometheus
-    include_role:
+    ansible.builtin.include_role:
       name: cloudalchemy.prometheus
     vars:
       prometheus_config_file: apps/monitoring/prometheus.yml
 
   - name: Install node_exporter
-    include_role:
+    ansible.builtin.include_role:
       name: cloudalchemy.node_exporter
 
   - name: Deploy monitoring stack
-    include_role:
+    ansible.builtin.include_role:
       name: docker-application
     vars:
       app_names:
@@ -36,18 +36,18 @@
       app_state: deploy
 
   - name: Setup grafana
-    include_role:
+    ansible.builtin.include_role:
       name: cloudalchemy.grafana
     vars:
       grafana_security:
         admin_user: admin
         admin_password: "{{ grafana_admin_pass }}"
       grafana_datasources:
-      - name: prometheus
-        type: prometheus
-        url: 'http://localhost:9090'
-        basicAuth: false
-      - name: loki
-        type: loki
-        url: 'http://localhost:3100'
-        basicAuth: false
+        - name: prometheus
+          type: prometheus
+          url: 'http://localhost:9090'
+          basicAuth: false
+        - name: loki
+          type: loki
+          url: 'http://localhost:3100'
+          basicAuth: false

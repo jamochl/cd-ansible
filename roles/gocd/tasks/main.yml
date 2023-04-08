@@ -13,24 +13,24 @@
     state: present
 
 - name: Cache Update
-  apt:
-    update_cache: yes
+  ansible.builtin.apt:
+    update_cache: true
 
 - name: Install go-server and go-agent
-  apt:
+  ansible.builtin.apt:
     name:
       - go-server
       - go-agent
-    state: latest
+    state: present
 
 - name: Start go-server
   service:
     name: go-server
     state: started
-    enabled: yes
+    enabled: true
 
 - name: Start go-agent
   service:
     name: go-agent
     state: started
-    enabled: yes
+    enabled: true

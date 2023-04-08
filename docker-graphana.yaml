@@ -2,7 +2,7 @@
   hosts: docker
   become: true
   vars:
-    PWD: "{{ lookup('env', 'PWD') }}"
+    pwd: "{{ lookup('env', 'PWD') }}"
     config_dir: "/config/"
     app_config_dir: "/config/{{ app_name }}"
     data_dir: "/data/"
@@ -20,12 +20,12 @@
 
     - name: Copy over app files
       ansible.builtin.copy:
-        src: "{{ PWD }}/apps/monitoring"
+        src: "{{ pwd }}/apps/monitoring"
         dest: "{{ config_dir }}"
 
     - name: Create docker daemon config
       ansible.builtin.copy:
-        src: "{{ PWD }}/apps/monitoring/daemon.json"
+        src: "{{ pwd }}/apps/monitoring/daemon.json"
         dest: "/etc/docker/daemon.json"
         owner: root
         group: root
@@ -37,7 +37,7 @@
         state: restarted
       when: daemon_config.changed == false
 
-    - include_role:
+    - ansible.builtin.include_role:
         name: deploy-compose
       vars:
         app_name: "monitoring"

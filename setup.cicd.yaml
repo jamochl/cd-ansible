@@ -6,11 +6,11 @@
     - cicd-packages
   tasks:
     - name: Install node_exporter
-      include_role:
+      ansible.builtin.include_role:
         name: cloudalchemy.node_exporter
 
     - name: Install Docker
-      include_role:
+      ansible.builtin.include_role:
         name: geerlingguy.docker
       vars:
         docker_daemon_options:
@@ -18,13 +18,13 @@
           experimental: true
 
     - name: Install Pip3
-      apt:
-        update_cache: yes
+      ansible.builtin.apt:
+        update_cache: true
         name: python3-pip
-        state: latest
+        state: present
 
     - name: Install Jenkins (Docker)
-      include_role:
+      ansible.builtin.include_role:
         name: docker-application
       vars:
         app_names:

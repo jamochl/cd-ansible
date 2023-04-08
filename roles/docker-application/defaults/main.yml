@@ -1,6 +1,6 @@
 ---
 # defaults file for docker-application
-PWD: "{{ lookup('env', 'PWD') }}"
+pwd: "{{ lookup('env', 'PWD') }}"
 config_dir: "/config/"
 data_dir: "/data/"
-delete_volumes: no
+delete_volumes: false

@@ -1,74 +1,91 @@
 # Get config onto host
-- name: "Synchronize {{ item }} config"
+- name: "Synchronize config {{ item }}"
   ansible.builtin.copy:
-    src: "{{ PWD }}/apps/{{ item }}"
+    src: "{{ pwd }}/apps/{{ item }}"
     dest: "{{ config_dir }}"
-    decrypt: yes
+    decrypt: true
+    mode: '0644'
   register: synchronize_status
 
 - name: "Adjust application {{ item }}"
-  environment:
-    APP_DATA_DIR: "{{ app_data_dir }}"
-    APP_CONFIG_DIR: "{{ app_config_dir }}"
+  vars:
+    env_contents: |
+      APP_DATA_DIR="{{ app_data_dir }}"
+      APP_CONFIG_DIR="{{ app_config_dir }}"
   block:
-  # Patch
-  - name: "Patch app {{ item }}"
-    community.docker.docker_compose:
-      project_src: "{{ app_config_dir }}"
-      project_name: "{{ item }}"
-      build: yes
-      pull: yes
-      remove_orphans: yes
-      recreate: always
-      restarted: yes
-      state: present
-    when: app_state == "patch"
+    # Ensure .env file exists in config dir
+    - name: ".env file exists"
+      ansible.builtin.file:
+        path: "{{ app_config_dir }}/.env"
+        state: touch
+        mode: u=rw,g=r,o=r
 
-  # Deploy
-  - name: "Deploy app {{ item }}"
-    community.docker.docker_compose:
-      project_src: "{{ app_config_dir }}"
-      project_name: "{{ item }}"
-      build: no
-      remove_orphans: yes
-      recreate: smart
-      restarted: no
-      state: present
-    when: app_state == "deploy" and synchronize_status.changed == false
+    # Ensure APP_DATA_DIR and APP_CONFIG_DIR are added to the .env files
+    - name: Ensure the default Apache port is 8080
+      ansible.builtin.lineinfile:
+        path: "{{ app_config_dir }}/.env"
+        regex: "{{ env_contents }}"
+        insertafter: 'EOF'
+        line: "{{ env_contents }}"
 
-  # Redeploy
-  - name: "Redeploy app {{ item }}"
-    community.docker.docker_compose:
-      project_src: "{{ app_config_dir }}"
-      project_name: "{{ item }}"
-      build: yes
-      pull: yes
-      remove_orphans: yes
-      recreate: always
-      restarted: yes
-      state: present
-    when: app_state == "deploy" and synchronize_status.changed == true
-
-  # Destroy
-  - name: "Destroy App"
-    when: app_state == "destroy"
-    block:
-    - name: "Destroy app {{ item }}"
+    # Patch
+    - name: "Patch app {{ item }}"
       community.docker.docker_compose:
         project_src: "{{ app_config_dir }}"
         project_name: "{{ item }}"
-        remove_orphans: yes
-        remove_volumes: "{{ delete_volumes }}"
-        state: absent
+        build: true
+        pull: true
+        remove_orphans: true
+        recreate: always
+        restarted: true
+        state: present
+      when: app_state == "patch"
 
-    - name: "Delete app {{ item }} data directory"
-      ansible.builtin.file:
-        path: "{{ app_data_dir }}"
-        state: absent
-      when: delete_volumes == "yes"
+    # Deploy
+    - name: "Deploy app {{ item }}"
+      community.docker.docker_compose:
+        project_src: "{{ app_config_dir }}"
+        project_name: "{{ item }}"
+        build: false
+        remove_orphans: true
+        recreate: smart
+        restarted: false
+        state: present
+      when: app_state == "deploy" and not synchronize_status.changed
 
-    - name: "Delete app {{ item }} config directory"
-      ansible.builtin.file:
-        path: "{{ app_config_dir }}"
-        state: absent
-      when: delete_volumes == "yes"
+    # Redeploy
+    - name: "Redeploy app {{ item }}"
+      community.docker.docker_compose:
+        project_src: "{{ app_config_dir }}"
+        project_name: "{{ item }}"
+        build: true
+        pull: true
+        remove_orphans: true
+        recreate: always
+        restarted: true
+        state: present
+      when: app_state == "deploy" and synchronize_status.changed
+
+    # Destroy
+    - name: "Destroy App"
+      when: app_state == "destroy"
+      block:
+        - name: "Destroy app {{ item }}"
+          community.docker.docker_compose:
+            project_src: "{{ app_config_dir }}"
+            project_name: "{{ item }}"
+            remove_orphans: true
+            remove_volumes: "{{ delete_volumes }}"
+            state: absent
+
+        - name: "Delete app data directory for {{ item }}"
+          ansible.builtin.file:
+            path: "{{ app_data_dir }}"
+            state: absent
+          when: delete_volumes
+
+        - name: "Delete app config directory for {{ item }}"
+          ansible.builtin.file:
+            path: "{{ app_config_dir }}"
+            state: absent
+          when: delete_volumes

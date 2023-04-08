@@ -1,7 +1,7 @@
 ---
 # Ensure required packages present
 - name: Install required pip packages
-  pip:
+  ansible.builtin.pip:
     name:
       - docker>=1.8.0
       - docker-compose>=1.7.0,<2.0.0
@@ -27,4 +27,4 @@
   vars:
     app_config_dir: "/config/{{ item }}"
     app_data_dir: "/data/{{ item }}"
-  include_tasks: "adjust_application.yaml"
+  ansible.builtin.include_tasks: "adjust_application.yaml"
