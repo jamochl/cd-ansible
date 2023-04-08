@@ -25,6 +25,6 @@ services:
       OBJECTSTORE_S3_AUTOCREATE: "false"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nextcloud.rule=Host(`cloud.lan.jamochl.com`)"
+      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.lan.jamsparrow.com`)"
       - "traefik.http.routers.nextcloud.entrypoints=web"
       - "traefik.http.services.nextcloud.loadbalancer.server.port=80"

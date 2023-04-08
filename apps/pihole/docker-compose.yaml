@@ -14,7 +14,7 @@ services:
       ServerIP: "${SERVER_IP:?err}"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pihole.rule=Host(`pihole.lan.jamochl.com`)"
+      - "traefik.http.routers.pihole.rule=Host(`pihole.lan.jamsparrow.com`)"
       - "traefik.http.routers.pihole.entrypoints=web"
       - "traefik.http.routers.pihole.service=pihole@docker"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"

@@ -1,28 +1,28 @@
 {
-    email james.lim@jamochl.com
+    email james.lim@jamsparrow.com
     # acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
 }
 
-*.lan.jamochl.com {
+*.lan.jamsparrow.com {
     tls {
         dns namecheap {
             api_key {env.NAMECHEAP_API_KEY}
             user {env.NAMECHEAP_API_USER}
         }
     }
-    @nextcloud host cloud.lan.jamochl.com
+    @nextcloud host cloud.lan.jamsparrow.com
     handle @nextcloud {
         reverse_proxy host.docker.internal:9001
     }
-    @onlyoffice host onlyoffice.lan.jamochl.com
+    @onlyoffice host onlyoffice.lan.jamsparrow.com
     handle @onlyoffice {
         reverse_proxy host.docker.internal:9002
     }
-    @pihole host pihole.lan.jamochl.com
+    @pihole host pihole.lan.jamsparrow.com
     handle @pihole {
         reverse_proxy host.docker.internal:9003
     }
-    @uptimekuma host uptime.lan.jamochl.com
+    @uptimekuma host uptime.lan.jamsparrow.com
     handle @uptimekuma {
         reverse_proxy host.docker.internal:9004
     }

@@ -9,7 +9,7 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.uptimekuma.rule=Host(`uptime.lan.jamochl.com`)"
+      - "traefik.http.routers.uptimekuma.rule=Host(`uptime.lan.jamsparrow.com`)"
       - "traefik.http.routers.uptimekuma.entrypoints=web"
       - "traefik.http.routers.uptimekuma.service=uptimekuma@docker"
       - "traefik.http.services.uptimekuma.loadbalancer.server.port=3001"

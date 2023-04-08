@@ -20,7 +20,7 @@ services:
       - "${APP_DATA_DIR:?err}/letsencrypt:/letsencrypt"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`traefik.lan.jamochl.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.lan.jamsparrow.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.entrypoints=web"
       - "traefik.http.services.dashboard.loadbalancer.server.port=1337"

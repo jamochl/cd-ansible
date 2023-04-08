@@ -1,14 +1,14 @@
 [docker]
-docker.lan.jamochl.com
+docker.lan.jamsparrow.com
 
 [gocd]
-gocd.lan.jamochl.com
+gocd.lan.jamsparrow.com
 
 [jenkins]
-jenkins.lan.jamsparrow.com
+cicd.lan.jamsparrow.com
 
 [cicd]
-jenkins.lan.jamsparrow.com
+cicd.lan.jamsparrow.com
 
 [monitoring]
-top.lan.jamochl.com
+monitor.lan.jamsparrow.com

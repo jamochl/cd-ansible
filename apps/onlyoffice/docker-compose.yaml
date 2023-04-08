@@ -11,6 +11,6 @@ services:
       - "${APP_DATA_DIR:?err}/data:/var/www/onlyoffice/Data"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.onlyoffice.rule=Host(`onlyoffice.lan.jamochl.com`)"
+      - "traefik.http.routers.onlyoffice.rule=Host(`onlyoffice.lan.jamsparrow.com`)"
       - "traefik.http.routers.onlyoffice.entrypoints=web"
       - "traefik.http.services.onlyoffice.loadbalancer.server.port=80"
