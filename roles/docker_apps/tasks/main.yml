@@ -25,6 +25,6 @@
 - name: Begin Application Adjustment
   with_items: "{{ app_names | list }}"
   vars:
-    app_config_dir: "/config/{{ item }}"
-    app_data_dir: "/data/{{ item }}"
+    app_config_dir: "{{ app_root }}/{{ item }}/config"
+    app_data_dir: "{{ app_root }}/{{ item }}/root"
   ansible.builtin.include_tasks: "adjust_application.yaml"

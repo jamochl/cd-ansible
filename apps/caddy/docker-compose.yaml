@@ -12,7 +12,5 @@ services:
       NAMECHEAP_API_USER: "${NAMECHEAP_API_USER:?err}"
     volumes:
       - "${APP_CONFIG_DIR:?err}/Caddyfile:/etc/caddy/Caddyfile"
-      - "${APP_DATA_DIR:?err}/data:/data"
-      - "${APP_DATA_DIR:?err}/config:/config"
     extra_hosts:
       - "host.docker.internal:host-gateway"

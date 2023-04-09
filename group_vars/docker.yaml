@@ -1,8 +1,8 @@
 app_names:
   - "nextcloud"
-  - "pihole"
+  # - "pihole"
   - "uptimekuma"
   - "onlyoffice"
   - "caddy"
   - "promtail"
-  # - "cadvisor"
+  - "cadvisor"
