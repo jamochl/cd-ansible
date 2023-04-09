@@ -2,7 +2,7 @@
 - name: "Synchronize config {{ item }}"
   ansible.builtin.copy:
     src: "{{ pwd }}/apps/{{ item }}"
-    dest: "{{ config_dir }}"
+    dest: "{{ config_dir }}/"
     decrypt: true
     mode: '0644'
   register: synchronize_status
@@ -21,7 +21,7 @@
         mode: u=rw,g=r,o=r
 
     # Ensure APP_DATA_DIR and APP_CONFIG_DIR are added to the .env files
-    - name: Ensure .env file contains DATA and CONFIG directories
+    - name: "Ensure .env file contains DATA and CONFIG directories {{ item }}"
       ansible.builtin.lineinfile:
         path: "{{ app_config_dir }}/.env"
         regex: "{{ env_contents }}"

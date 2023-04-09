@@ -3,3 +3,5 @@
 pwd: "{{ lookup('env', 'PWD') }}"
 delete_volumes: false
 app_root: "/app_data"
+config_dir: "{{ app_root }}/config"
+data_dir: "{{ app_root }}/data"
